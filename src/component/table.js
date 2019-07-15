@@ -1,71 +1,39 @@
 import React from "react";
-import { createGlobalStyle } from "styled-components";
-// import { Table } from 'antd';
-const GlobalStyle = createGlobalStyle`
-  table {
-  width: 100%;
-  border: 3px solid #ccccccf0;
-  border-collapse: collapse;
-  th,
-  td {
-    border: 3px solid #ccccccf0;
-    border-collapse: collapse;
-  }
-  th,
-  td,
-  tr {
-    padding: 5px;
-    background-color: #989e9e;
-    color: white !important;
-    background: #989e9e !important;
-  }
-  th {
-    font-weight: 900;
-  }
-  tr:hover {
-    background-color: #989e9e !important;
-  }
-  th {
-    text-align: center;
-  }
-  }
-  div {
-    padding: 16px;
-  }
-`;
+import {
+  Table,
+  TableHeadCell,
+  TableRow,
+  TableValueCell,
+  ViewContainer
+} from "./styled";
 
-const Tableclass = (props) => {
-    var tableHeaders = (
-        <tr>
-            {props.columns.map((column, index) => {
-                return <th key={index}>{column}</th>;
-            })}
-        </tr>
-    );
-    var tableBody = props.dataSource.map((row, index) => {
-        return (
-            <tr key={index}>
-                {props.columns.map( (column, index)=> {
-                    return <td key={index}>{row[column]}</td>;
-                })}
-            </tr>
-        );
-    });
-    return (
-        <div className="table-div">
+export default ({ dataSource = [], columns = [] }) => {
+  const headerCells = columns.map((column, idx) => {
+    const { title, style } = column;
+    return <TableHeadCell key={idx} style={style} children={title} />;
+  });
 
-            <table width="100%">
-                <thead key="thead">
-                    {tableHeaders}
-                </thead>
-                <tbody key="tbody">
-                    {tableBody}
-                </tbody>
-            </table>
-            {/* <Table dataSource={props.dataSource} columns={props.columns} /> */}
-            <GlobalStyle />
-        </div>
-    );
-}
+  const bodyCells = dataSource.map((rowData, idx) => (
+    <TableRow key={idx}>
+      {columns.map(({ dataIndex, render, style }, idx) => (
+        <TableValueCell key={idx} style={style}>
+          {dataIndex ? rowData[dataIndex] : render(rowData)}
+        </TableValueCell>
+      ))}
+    </TableRow>
+  ));
 
-export default (Tableclass);
+  return (
+    <ViewContainer>
+      <Table>
+        <thead style={{ minHeight: "50px", border: "1px solid green" }}>
+          <TableRow>{headerCells}</TableRow>
+        </thead>
+
+        <tbody style={{ minHeight: "120px", border: "1px solid blue" }}>
+          {bodyCells}
+        </tbody>
+      </Table>
+    </ViewContainer>
+  );
+};
