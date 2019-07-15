@@ -4,7 +4,11 @@ import dataSource from "./utils/data";
 import columns from "./utils/columns";
 
 function App() {
-  return <Tableclass columns={columns} dataSource={dataSource} />;
+  return (
+    <div className="app">
+      <p>Table</p>
+      <Tableclass columns={columns} dataSource={dataSource} />
+    </div>);
 }
 
 export default App;
