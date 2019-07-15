@@ -35,29 +35,32 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const Tableclass = (props) => {
-    var tableHeaders = (<thead>
+    var tableHeaders = (
         <tr>
-            {props.columns.map((column) => {
-                return <th>{column}</th>;
+            {props.columns.map((column, index) => {
+                return <th key={index}>{column}</th>;
             })}
         </tr>
-    </thead>);
-    var tableBody = props.dataSource.map((row) => {
+    );
+    var tableBody = props.dataSource.map((row, index) => {
         return (
-            <tbody>
-                <tr>
-                    {props.columns.map(function (column) {
-                        return <td>{row[column]}</td>;
-                    })}
-                </tr>
-            </tbody>);
+            <tr key={index}>
+                {props.columns.map( (column, index)=> {
+                    return <td key={index}>{row[column]}</td>;
+                })}
+            </tr>
+        );
     });
     return (
         <div className="table-div">
 
             <table width="100%">
-                {tableHeaders}
-                {tableBody}
+                <thead key="thead">
+                    {tableHeaders}
+                </thead>
+                <tbody key="tbody">
+                    {tableBody}
+                </tbody>
             </table>
             {/* <Table dataSource={props.dataSource} columns={props.columns} /> */}
             <GlobalStyle />
