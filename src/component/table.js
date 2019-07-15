@@ -1,6 +1,6 @@
 import React from "react";
 import { createGlobalStyle } from "styled-components";
-import { Table } from 'antd';
+// import { Table } from 'antd';
 const GlobalStyle = createGlobalStyle`
   table {
   width: 100%;
@@ -35,9 +35,31 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const Tableclass = (props) => {
+    var tableHeaders = (<thead>
+        <tr>
+            {props.columns.map((column) => {
+                return <th>{column}</th>;
+            })}
+        </tr>
+    </thead>);
+    var tableBody = props.dataSource.map((row) => {
+        return (
+            <tbody>
+                <tr>
+                    {props.columns.map(function (column) {
+                        return <td>{row[column]}</td>;
+                    })}
+                </tr>
+            </tbody>);
+    });
     return (
         <div className="table-div">
-            <Table dataSource={props.dataSource} columns={props.columns} />
+
+            <table width="100%">
+                {tableHeaders}
+                {tableBody}
+            </table>
+            {/* <Table dataSource={props.dataSource} columns={props.columns} /> */}
             <GlobalStyle />
         </div>
     );
