@@ -1,5 +1,4 @@
 import React from "react";
-import MapClass from "./map";
 import {
   Table,
   TableHeadCell,
@@ -9,25 +8,29 @@ import {
 } from "./styled";
 
 export default ({ dataSource = [], columns = [] }) => {
-  // const headerCells = columns.map((column, idx) => {
-  //   const { title, style } = column;
-  //   return <TableHeadCell key={idx} style={style} children={title} />;
-  // });
+  const renderView = rowData =>
+    columns.map(({ dataIndex, render, style, title }, idx) => {
+      let children = title;
+      let Component = TableHeadCell;
+      if (rowData) {
+        Component = TableValueCell;
+        children = dataIndex ? rowData[dataIndex] : render(rowData);
+      }
+
+      return <Component key={idx} style={style} children={children} />;
+    });
+
+  const headerCells = renderView();
+
   const bodyCells = dataSource.map((rowData, idx) => (
-    <TableRow key={idx}>
-      {columns.map(({ dataIndex, render, style }, idx) => (
-        <TableValueCell key={idx} style={style}>
-          {dataIndex ? rowData[dataIndex] : render(rowData)}
-        </TableValueCell>
-      ))}
-    </TableRow>
+    <TableRow key={idx} children={renderView(rowData)} />
   ));
 
   return (
     <ViewContainer>
       <Table>
         <thead style={{ minHeight: "50px", border: "1px solid green" }}>
-          <TableRow><MapClass Chlid={<TableHeadCell/>} columns={columns}/></TableRow>
+          <TableRow>{headerCells}</TableRow>
         </thead>
 
         <tbody style={{ minHeight: "120px", border: "1px solid blue" }}>
